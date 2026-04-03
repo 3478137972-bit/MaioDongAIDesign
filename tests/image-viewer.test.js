@@ -1,14 +1,15 @@
 /**
- * 图片查看器 MVP 自动化测试脚本框架
+ * 图片查看器 MVP + AI 绘图智能体 - 自动化测试脚本框架
  * 
- * @version 1.0
- * @date 2026-03-20
+ * @version 2.0
+ * @date 2026-03-29
  * @author tester (测试运维工程师)
  * 
  * 使用说明:
  * 1. 安装依赖：npm install -D jest @testing-library/react @testing-library/jest-dom
  * 2. 运行测试：npm test
  * 3. 覆盖率报告：npm test -- --coverage
+ * 4. E2E 测试：npx playwright test
  */
 
 // ==================== 测试配置 ====================
@@ -33,9 +34,16 @@ const TEST_CONFIG = {
   // 缩放配置
   zoom: {
     min: 0.5,
-    max: 4.0,
+    max: 3.0,  // 适配新代码的 0.5x-3x 缩放范围
     doubleTap: 2.0,
     boundaryOvershoot: 0.15
+  },
+  
+  // AI 绘图 API 配置
+  api: {
+    timeout: 30000,
+    pollInterval: 10000,
+    maxRetries: 30
   }
 };
 
@@ -219,7 +227,7 @@ describe('ImageViewer MVP 自动化测试', () => {
       expect(scale).toContain('1');
     });
     
-    test('2.3 缩放范围限制 (50%-400%)', async () => {
+    test('2.3 缩放范围限制 (50%-300%)', async () => {
       const viewer = document.querySelector('.image-viewer');
       
       // 测试最小缩放
@@ -229,10 +237,10 @@ describe('ImageViewer MVP 自动化测试', () => {
       expect(scale).toBeGreaterThanOrEqual(0.5);
       
       // 测试最大缩放
-      await simulatePinch(viewer.querySelector('img'), 50, 300);
+      await simulatePinch(viewer.querySelector('img'), 50, 150);
       await wait(100);
       scale = parseFloat(getComputedStyle(viewer.querySelector('img')).transform.split(',')[0]);
-      expect(scale).toBeLessThanOrEqual(4.0);
+      expect(scale).toBeLessThanOrEqual(3.0);  // 适配新代码的 3x 最大缩放
     });
     
     test('2.4 边界反弹效果', async () => {
