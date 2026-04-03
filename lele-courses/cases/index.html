@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乐乐课程案例展示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 30px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Filter Tabs */
+        .filter-tabs {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+        
+        .tab:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+        
+        .tab.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .filter-stats {
+            text-align: right;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Case Grid */
+        .case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 100px;
+        }
+        
+        .case-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .case-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        
+        .case-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 3rem;
+            overflow: hidden;
+        }
+        
+        .case-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .case-card:hover .case-image img {
+            transform: scale(1.05);
+        }
+        
+        .case-content {
+            padding: 20px;
+        }
+        
+        .case-tag {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .tag-web { background: #e0e7ff; color: #4338ca; }
+        .tag-payment { background: #fee2e2; color: #dc2626; }
+        .tag-portfolio { background: #dbeafe; color: #2563eb; }
+        .tag-feedback { background: #d1fae5; color: #059669; }
+        .tag-interaction { background: #fef3c7; color: #d97706; }
+        
+        .case-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .case-desc {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        /* CTA Button */
+        .cta-fixed {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+        
+        .cta-btn {
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .cta-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .cta-secondary {
+            background: white;
+            color: #667eea;
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.25);
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow: auto;
+            position: relative;
+            box-shadow: 0 25px 100px rgba(0,0,0,0.3);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: background 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: rgba(0,0,0,0.8);
+        }
+        
+        .modal-image {
+            width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            display: block;
+        }
+        
+        .modal-info {
+            padding: 30px;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .modal-desc {
+            color: #666;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
+        .modal-nav {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 30px 30px;
+        }
+        
+        .modal-nav-btn {
+            padding: 10px 25px;
+            border-radius: 25px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .modal-nav-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .modal-nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .stats {
+                gap: 20px;
+            }
+            
+            .stat-item {
+                padding: 10px 20px;
+            }
+            
+            .case-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+            
+            .cta-fixed {
+                bottom: 20px;
+                width: calc(100% - 40px);
+                justify-content: center;
+            }
+            
+            .cta-btn {
+                flex: 1;
+                max-width: 200px;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 20px;
+            }
+            
+            .modal-nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .modal-nav-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎯 他们也曾迷茫，现在找到了方向</h1>
+            <p>真实学员案例，见证成长与蜕变</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalCases">26</span>
+                    <span class="stat-label">真实案例</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">98%</span>
+                    <span class="stat-label">好评率</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">6 期</span>
+                    <span class="stat-label">线下活动</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <div class="tabs">
+                <button class="tab active" data-filter="all">全部</button>
+                <button class="tab" data-filter="web">💻 网页开发</button>
+                <button class="tab" data-filter="portfolio">🎯 学员成果</button>
+                <button class="tab" data-filter="feedback">💬 学员评价</button>
+                <button class="tab" data-filter="payment">💰 付费凭证</button>
+                <button class="tab" data-filter="interaction">🤝 学员互动</button>
+            </div>
+            <div class="filter-stats">共 <span id="caseCount">26</span> 个案例</div>
+        </div>
+        
+        <!-- Case Grid -->
+        <div class="case-grid" id="caseGrid">
+            <!-- Cases will be inserted here -->
+        </div>
+    </div>
+    
+    <!-- CTA Buttons -->
+    <div class="cta-fixed">
+        <button class="cta-btn cta-secondary" onclick="alert('咨询功能开发中...')">💬 立即咨询</button>
+        <button class="cta-btn cta-primary" onclick="alert('课程详情开发中...')">📚 了解课程</button>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <img class="modal-image" id="modalImage" src="" alt="">
+            <div class="modal-info">
+                <h3 class="modal-title" id="modalTitle"></h3>
+                <p class="modal-desc" id="modalDesc"></p>
+            </div>
+            <div class="modal-nav">
+                <button class="modal-nav-btn" id="prevBtn" onclick="navigateModal(-1)">← 上一张</button>
+                <button class="modal-nav-btn" id="nextBtn" onclick="navigateModal(1)">下一张 →</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Case Data - 26 cases organized by category
+        const cases = [
+            // 💻 网页开发案例 (6 张) - 乐乐个人作品
+            { id: 1, category: 'web', title: '网页开发案例 #1', desc: '乐乐个人网页开发作品', image: 'web_development/web_01.jpg' },
+            { id: 2, category: 'web', title: '网页开发案例 #2', desc: '乐乐个人网页开发作品', image: 'web_development/web_02.jpg' },
+            { id: 3, category: 'web', title: '网页开发案例 #3', desc: '乐乐个人网页开发作品', image: 'web_development/web_03.jpg' },
+            { id: 4, category: 'web', title: '网页开发案例 #4', desc: '乐乐个人网页开发作品', image: 'web_development/web_04.jpg' },
+            { id: 5, category: 'web', title: '网页开发案例 #5', desc: '乐乐个人网页开发作品', image: 'web_development/web_05.jpg' },
+            { id: 6, category: 'web', title: '网页开发案例 #6', desc: '乐乐个人网页开发作品', image: 'web_development/web_06.jpg' },
+            
+            // 💰 付费凭证 (2 张)
+            { id: 7, category: 'payment', title: '付费凭证 #1', desc: '学员付费记录 - 信任的起点', image: 'payment/pay_01.jpg' },
+            { id: 8, category: 'payment', title: '付费凭证 #2', desc: '学员付费记录 - 信任的起点', image: 'payment/pay_02.jpg' },
+            
+            // 🎯 学员成果 (6 张)
+            { id: 9, category: 'portfolio', title: 'AI 设计作品 #1', desc: '学员完成的 AI 设计作品', image: 'portfolio/work_01.jpg' },
+            { id: 10, category: 'portfolio', title: 'AI 设计作品 #2', desc: '学员完成的 AI 设计作品', image: 'portfolio/work_02.jpg' },
+            { id: 11, category: 'portfolio', title: 'AI 设计作品 #3', desc: '学员完成的 AI 设计作品', image: 'portfolio/work_03.jpg' },
+            { id: 12, category: 'portfolio', title: 'AI 设计作品 #4', desc: '学员完成的 AI 设计作品', image: 'portfolio/work_04.jpg' },
+            { id: 13, category: 'portfolio', title: 'AI 设计作品 #5', desc: '学员完成的 AI 设计作品', image: 'portfolio/work_05.jpg' },
+            { id: 14, category: 'portfolio', title: 'AI 设计作品 #6', desc: '学员完成的 AI 设计作品', image: 'portfolio/work_06.jpg' },
+            
+            // 💬 学员评价 (4 张)
+            { id: 15, category: 'feedback', title: '学员评价 #1', desc: '学员学习反馈与心得', image: 'feedback/review_01.jpg' },
+            { id: 16, category: 'feedback', title: '学员评价 #2', desc: '学员学习反馈与心得', image: 'feedback/review_02.jpg' },
+            { id: 17, category: 'feedback', title: '学员评价 #3', desc: '学员学习反馈与心得', image: 'feedback/review_03.jpg' },
+            { id: 18, category: 'feedback', title: '学员评价 #4', desc: '学员学习反馈与心得', image: 'feedback/review_04.jpg' },
+            
+            // 🤝 学员互动 (8 张)
+            { id: 19, category: 'interaction', title: '学员互动 #1', desc: '学员学习与答疑记录', image: 'interaction/chat_01.jpg' },
+            { id: 20, category: 'interaction', title: '学员互动 #2', desc: '学员学习与答疑记录', image: 'interaction/chat_02.jpg' },
+            { id: 21, category: 'interaction', title: '学员互动 #3', desc: '学员学习与答疑记录', image: 'interaction/chat_03.jpg' },
+            { id: 22, category: 'interaction', title: '学员互动 #4', desc: '学员学习与答疑记录', image: 'interaction/chat_04.jpg' },
+            { id: 23, category: 'interaction', title: '学员互动 #5', desc: '学员学习与答疑记录', image: 'interaction/chat_05.jpg' },
+            { id: 24, category: 'interaction', title: '学员互动 #6', desc: '学员学习与答疑记录', image: 'interaction/chat_06.jpg' },
+            { id: 25, category: 'interaction', title: '学员互动 #7', desc: '学员学习与答疑记录', image: 'interaction/chat_07.jpg' },
+            { id: 26, category: 'interaction', title: '学员互动 #8', desc: '学员学习与答疑记录', image: 'interaction/chat_08.jpg' }
+        ];
+        
+        let currentModalIndex = 0;
+        let filteredCases = [...cases];
+        
+        // Render cases
+        function renderCases(filter = 'all') {
+            const grid = document.getElementById('caseGrid');
+            filteredCases = filter === 'all' ? cases : cases.filter(c => c.category === filter);
+            
+            grid.innerHTML = filteredCases.map((c, i) => `
+                <div class="case-card" onclick="openModal(${i})">
+                    <div class="case-image">
+                        <img src="images/compressed/${c.image}" alt="${c.title}" loading="lazy" onerror="this.parentElement.innerHTML='📷'">
+                    </div>
+                    <div class="case-content">
+                        <span class="case-tag tag-${c.category}">${getCategoryName(c.category)}</span>
+                        <h3 class="case-title">${c.title}</h3>
+                        <p class="case-desc">${c.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('caseCount').textContent = filteredCases.length;
+        }
+        
+        function getCategoryName(cat) {
+            const names = {
+                web: '💻 网页开发',
+                payment: '💰 付费凭证',
+                portfolio: '🎯 学员成果',
+                feedback: '💬 学员评价',
+                interaction: '🤝 学员互动'
+            };
+            return names[cat] || cat;
+        }
+        
+        // Filter functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                renderCases(tab.dataset.filter);
+            });
+        });
+        
+        // Modal functionality
+        function openModal(index) {
+            currentModalIndex = index;
+            const c = filteredCases[index];
+            document.getElementById('modalImage').src = `images/compressed/${c.image}`;
+            document.getElementById('modalTitle').textContent = c.title;
+            document.getElementById('modalDesc').textContent = c.desc;
+            document.getElementById('modal').classList.add('active');
+            updateNavButtons();
+        }
+        
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+        
+        function navigateModal(direction) {
+            currentModalIndex += direction;
+            if (currentModalIndex < 0) currentModalIndex = filteredCases.length - 1;
+            if (currentModalIndex >= filteredCases.length) currentModalIndex = 0;
+            
+            const c = filteredCases[currentModalIndex];
+            document.getElementById('modalImage').src = `images/compressed/${c.image}`;
+            document.getElementById('modalTitle').textContent = c.title;
+            document.getElementById('modalDesc').textContent = c.desc;
+            updateNavButtons();
+        }
+        
+        function updateNavButtons() {
+            document.getElementById('prevBtn').disabled = currentModalIndex === 0;
+            document.getElementById('nextBtn').disabled = currentModalIndex === filteredCases.length - 1;
+        }
+        
+        // Close modal on overlay click
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') closeModal();
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('modal').classList.contains('active')) return;
+            if (e.key === 'Escape') closeModal();
+            if (e.key === 'ArrowLeft') navigateModal(-1);
+            if (e.key === 'ArrowRight') navigateModal(1);
+        });
+        
+        // Initial render
+        renderCases();
+    </script>
+</body>
+</html>
