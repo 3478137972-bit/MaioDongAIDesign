@@ -13,6 +13,32 @@ Things like:
 - Device nicknames
 - Anything environment-specific
 
+---
+
+## 🤖 模型 API 配置
+
+### 小米 MiMo 系列
+
+```yaml
+provider: xiaomi-mimo
+api_key: tp-cow6uyoe9ztn4c56avlhko7uxsswwfay4728egjkusqdn8xc
+base_url: https://token-plan-cn.xiaomimimo.com/v1
+protocol: OpenAI 兼容
+
+模型列表:
+  - MiMo-V2-Pro      # 多模态理解/视觉分析
+  - MiMo-V2-Omni     # 图文混排/文档创作
+  - MiMo-V2-TTS      # 中文语音合成
+
+团队角色分配:
+  - analyst: MiMo-V2-Pro    # 需求分析（多模态）
+  - designer: MiMo-V2-Pro   # UI/UX 设计（视觉分析）
+  - writer: MiMo-V2-Omni    # 技术文档（图文混排）
+  - tts: MiMo-V2-TTS        # 语音输出（中文）
+  - developer: qwen3-coder-next  # 保持原有（代码能力更强）
+  - tester: qwen3-coder-next     # 保持原有（代码相关）
+```
+
 ## Examples
 
 ```markdown
